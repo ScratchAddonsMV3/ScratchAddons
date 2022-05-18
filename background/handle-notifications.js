@@ -2,23 +2,23 @@ import { updateBadge } from "./message-cache.js";
 
 const periods = [
   {
-    name: chrome.i18n.getMessage("15min"),
+    name: "For 15 minutes", // chrome.i18n.getMessage("15min"),
     mins: 15,
   },
   {
-    name: chrome.i18n.getMessage("1hour"),
+    name: "For 1 hour", // chrome.i18n.getMessage("1hour"),
     mins: 60,
   },
   {
-    name: chrome.i18n.getMessage("8hours"),
+    name: "For 8 hours", // chrome.i18n.getMessage("8hours"),
     mins: 480,
   },
   {
-    name: chrome.i18n.getMessage("24hours"),
+    name: "For 24 hours", // chrome.i18n.getMessage("24hours"),
     mins: 1440,
   },
   {
-    name: chrome.i18n.getMessage("untilEnabled"),
+    name: "Until I turn it back on", // chrome.i18n.getMessage("untilEnabled"),
     mins: Infinity,
   },
 ];
@@ -48,7 +48,7 @@ function contextMenuUnmuted() {
   currentMenuItem = "mute";
   chrome.contextMenus.create({
     id: "mute",
-    title: chrome.i18n.getMessage("muteFor"),
+    title: "Mute", // chrome.i18n.getMessage("muteFor"),
     contexts: ["browser_action"],
   });
   for (const period of periods) {
@@ -72,7 +72,7 @@ function contextMenuMuted() {
   currentMenuItem = "unmute";
   chrome.contextMenus.create({
     id: "unmute",
-    title: chrome.i18n.getMessage("unmute"),
+    title: "Unmute", // chrome.i18n.getMessage("unmute"),
     contexts: ["browser_action"],
   });
   chrome.browserAction.setIcon({

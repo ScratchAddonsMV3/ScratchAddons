@@ -15,7 +15,7 @@ export default function create(opts) {
     delete newOpts.silent;
   } else newOpts = opts;
   delete newOpts.base;
-  newOpts.contextMessage = chrome.i18n.getMessage("extensionName");
+  newOpts.contextMessage = "Scratch Addons"; // chrome.i18n.getMessage("extensionName");
   return new Promise((resolve) => {
     chrome.notifications.create(notifId, newOpts, () => resolve(notifId));
   });
