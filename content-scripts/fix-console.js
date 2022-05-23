@@ -4,8 +4,13 @@ function fixConsole() {
   };
 }
 
-if (!(document.documentElement instanceof SVGElement)) {
-  const fixConsoleScript = document.createElement("script");
-  fixConsoleScript.append(document.createTextNode("(" + fixConsole + ")()"));
-  (document.head || document.documentElement).appendChild(fixConsoleScript);
+runMainWorldScript(fixConsole);
+
+function runMainWorldScript(fn) {
+  if (typeof fn !== "function") throw "Expected function";
+  const div = document.createElement("div");
+  div.setAttribute("onclick", `(${fn.toString()})()`);
+  document.documentElement.appendChild(div);
+  div.click();
+  div.remove();
 }

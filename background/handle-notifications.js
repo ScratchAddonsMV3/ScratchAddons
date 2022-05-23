@@ -49,17 +49,17 @@ function contextMenuUnmuted() {
   chrome.contextMenus.create({
     id: "mute",
     title: "Mute", // chrome.i18n.getMessage("muteFor"),
-    contexts: ["browser_action"],
+    contexts: ["action"],
   });
   for (const period of periods) {
     chrome.contextMenus.create({
       id: `mute_${period.mins}`,
       title: period.name,
       parentId: "mute",
-      contexts: ["browser_action"],
+      contexts: ["action"],
     });
   }
-  chrome.browserAction.setIcon({
+  chrome.action.setIcon({
     path: {
       16: "../images/icon-16.png",
       32: "../images/icon-32.png",
@@ -73,9 +73,9 @@ function contextMenuMuted() {
   chrome.contextMenus.create({
     id: "unmute",
     title: "Unmute", // chrome.i18n.getMessage("unmute"),
-    contexts: ["browser_action"],
+    contexts: ["action"],
   });
-  chrome.browserAction.setIcon({
+  chrome.action.setIcon({
     path: {
       16: "../images/icon-gray-16.png",
       32: "../images/icon-gray-32.png",

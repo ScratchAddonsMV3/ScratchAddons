@@ -23,8 +23,13 @@ function injectPrototype() {
   };
 }
 
-if (!(document.documentElement instanceof SVGElement) && location.pathname.split("/")[1] === "projects") {
-  const injectPrototypeScript = document.createElement("script");
-  injectPrototypeScript.append(document.createTextNode("(" + injectPrototype + ")()"));
-  (document.head || document.documentElement).appendChild(injectPrototypeScript);
+runMainWorldScript(injectPrototype);
+
+function runMainWorldScript(fn) {
+  if (typeof fn !== "function") throw "Expected function";
+  const div = document.createElement("div");
+  div.setAttribute("onclick", `(${fn.toString()})()`);
+  document.documentElement.appendChild(div);
+  div.click();
+  div.remove();
 }
