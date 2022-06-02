@@ -4,11 +4,6 @@ import { notifyNewMessages } from "../addons/scratch-notifier/notifier.js";
 let ready = false;
 let duringBadgeUpdate = false;
 
-const promisify =
-  (callbackFn) =>
-  (...args) =>
-    new Promise((resolve) => callbackFn(...args, resolve));
-
 const ALARM_NAME = "fetchMessages";
 const BADGE_ALARM_NAME = "updateBadge";
 
@@ -42,8 +37,8 @@ export async function updateBadge(defaultStoreId) {
         const text = isLoggedIn ? String(count) : "?";
         // The badge will show incorrect message count in other auth contexts.
         // Blocked on Chrome implementing store ID-based tab query
-        await promisify(chrome.action.setBadgeBackgroundColor.bind(chrome.action))({ color });
-        await promisify(chrome.action.setBadgeText.bind(chrome.action))({ text });
+        await chrome.action.setBadgeBackgroundColor({ color });
+        await chrome.action.setBadgeText({ text });
         return;
       }
     }
@@ -56,7 +51,7 @@ export async function updateBadge(defaultStoreId) {
   // Hide badge when logged out and showOffline is false,
   // or when the logged-in user has no unread messages,
   // or when the addon is disabled
-  await promisify(chrome.action.setBadgeText.bind(chrome.action))({ text: "" });
+  await chrome.action.setBadgeText({ text: "" });
 }
 
 /**
@@ -66,7 +61,7 @@ export async function updateBadge(defaultStoreId) {
  */
 export async function startCache(defaultStoreId, forceClear) {
   ready = false;
-  await promisify(chrome.alarms.clear.bind(chrome.alarms))(ALARM_NAME);
+  await chrome.alarms.clear(ALARM_NAME);
   try {
     await MessageCache.updateMessages(
       defaultStoreId,
