@@ -67,16 +67,10 @@ let fuse;
   chrome.permissions.onAdded?.addListener(updateGrantedPermissions);
   chrome.permissions.onRemoved?.addListener(updateGrantedPermissions);
 
-  const promisify =
-    (callbackFn) =>
-    (...args) =>
-      new Promise((resolve) => callbackFn(...args, resolve));
-
   let handleConfirmClicked = null;
 
   const serializeSettings = async () => {
-    const syncGet = promisify(chrome.storage.sync.get.bind(chrome.storage.sync));
-    const storedSettings = await syncGet(["globalTheme", "addonSettings", "addonsEnabled"]);
+    const storedSettings = await chrome.storage.sync.get(["globalTheme", "addonSettings", "addonsEnabled"]);
     const serialized = {
       core: {
         lightTheme: storedSettings.globalTheme,
@@ -95,9 +89,7 @@ let fuse;
 
   const deserializeSettings = async (str, manifests, confirmElem) => {
     const obj = JSON.parse(str);
-    const syncGet = promisify(chrome.storage.sync.get.bind(chrome.storage.sync));
-    const syncSet = promisify(chrome.storage.sync.set.bind(chrome.storage.sync));
-    const { addonSettings, addonsEnabled } = await syncGet(["addonSettings", "addonsEnabled"]);
+    const { addonSettings, addonsEnabled } = await chrome.storage.sync.get(["addonSettings", "addonsEnabled"]);
     const pendingPermissions = {};
     for (const addonId of Object.keys(obj.addons)) {
       const addonValue = obj.addons[addonId];
@@ -122,7 +114,7 @@ let fuse;
     handleConfirmClicked = async () => {
       handleConfirmClicked = null;
       if (Object.keys(pendingPermissions).length) {
-        const granted = await promisify(chrome.permissions.request.bind(chrome.permissions))({
+        const granted = await chrome.permissions.request({
           permissions: Object.values(pendingPermissions).flat(),
         });
         Object.keys(pendingPermissions).forEach((addonId) => {
@@ -130,7 +122,7 @@ let fuse;
         });
       }
       const prerelease = chrome.runtime.getManifest().version_name.endsWith("-prerelease");
-      await syncSet({
+      await chrome.storage.sync.set({
         globalTheme: !!obj.core.lightTheme,
         addonsEnabled,
         addonSettings: minifySettings(addonSettings, prerelease ? null : manifests),

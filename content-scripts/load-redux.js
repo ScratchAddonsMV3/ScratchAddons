@@ -66,8 +66,13 @@ fix this warning."
   };
 }
 
-if (!(document.documentElement instanceof SVGElement)) {
-  const injectReduxScript = document.createElement("script");
-  injectReduxScript.append(document.createTextNode("(" + injectRedux + ")()"));
-  (document.head || document.documentElement).appendChild(injectReduxScript);
+runMainWorldScript(injectRedux);
+
+function runMainWorldScript(fn) {
+  if (typeof fn !== "function") throw "Expected function";
+  const div = document.createElement("div");
+  div.setAttribute("onclick", `(${fn.toString()})()`);
+  document.documentElement.appendChild(div);
+  div.click();
+  div.remove();
 }

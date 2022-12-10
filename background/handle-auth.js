@@ -2,11 +2,6 @@ import { startCache } from "./message-cache.js";
 import { openMessageCache } from "../libraries/common/message-cache.js";
 import { purgeDatabase } from "../addons/scratch-notifier/notifier.js";
 
-const promisify =
-  (callbackFn) =>
-  (...args) =>
-    new Promise((resolve) => callbackFn(...args, resolve));
-
 function getDefaultStoreId() {
   // Request Scratch to set the CSRF token.
   return fetch("https://scratch.mit.edu/csrf_token/", {
@@ -14,7 +9,7 @@ function getDefaultStoreId() {
   })
     .catch(() => {})
     .then(() =>
-      promisify(chrome.cookies.get)({
+      chrome.cookies.get({
         url: "https://scratch.mit.edu/",
         name: "scratchcsrftoken",
       })
