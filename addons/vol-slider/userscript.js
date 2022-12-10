@@ -1,6 +1,6 @@
 import { setup, setVol, getDefVol, setDefVol, isMuted } from "./module.js";
 
-export default async function ({ addon, global, console }) {
+export default async function ({ addon, console }) {
   const vm = addon.tab.traps.vm;
   let icon = document.createElement("img");
   icon.loading = "lazy";
@@ -14,13 +14,16 @@ export default async function ({ addon, global, console }) {
   const container = document.createElement("div");
   container.className = "sa-volume";
 
+  if (addon.tab.redux.state && addon.tab.redux.state.scratchGui.stageSize.stageSize === "small") {
+    document.body.classList.add("sa-vol-slider-small");
+  }
   document.addEventListener(
     "click",
     (e) => {
       if (e.target.closest("[class*='stage-header_stage-button-first']")) {
-        container.style.display = "none";
+        document.body.classList.add("sa-vol-slider-small");
       } else if (e.target.closest("[class*='stage-header_stage-button-last']")) {
-        container.style.display = "inline-block";
+        document.body.classList.remove("sa-vol-slider-small");
       }
     },
     { capture: true }
